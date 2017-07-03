@@ -2,6 +2,7 @@ package com.ynaito.servicesample;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -49,4 +50,12 @@ public class LogService extends Service {
         Log.d(TAG, "onCreate");
         super.onCreate();
     }
+
+    public class LocalBinder extends Binder {
+        LogService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return LogService.this;
+        }
+    }
+
 }
