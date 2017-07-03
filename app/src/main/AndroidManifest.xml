@@ -16,6 +16,12 @@
             </intent-filter>
         </activity>
         <service android:name=".LogService" />
+        <receiver android:name=".FooReceiver">
+            <intent-filter>
+                <!--定義したactionを追記する-->
+                <action android:name="action_notification_intent" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

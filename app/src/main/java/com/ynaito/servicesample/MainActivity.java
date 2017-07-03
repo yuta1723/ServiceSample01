@@ -98,9 +98,9 @@ public class MainActivity extends AppCompatActivity {
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setContentTitle("TITLE iS XX");
         builder.setContentText("Text is XX");
-        Intent seekToPreviousIntent = new Intent(this, LogService.class);
+        Intent seekToPreviousIntent = new Intent(this, FooReceiver.class);
         seekToPreviousIntent.setAction(ACTION_NOTIFICATION_INTENT);
-        PendingIntent seekToPreviousPendingIntent = PendingIntent.getService(getApplicationContext(), FLAG_NOTIFICATION_INTENT, seekToPreviousIntent, 0);
+        PendingIntent seekToPreviousPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), FLAG_NOTIFICATION_INTENT, seekToPreviousIntent, 0);
         builder.setContentIntent(seekToPreviousPendingIntent);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 //            builder.addAction(R.mipmap.ic_launcher, "button", seekToPreviousPendingIntent);
