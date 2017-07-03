@@ -1,10 +1,14 @@
 package com.ynaito.servicesample;
 
-import android.app.Service;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.session.MediaSession;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
             mBound = false;
         }
     };
+    private String ACTION_NOTIFICATION_INTENT = "action_notification_intent";
+    private int FLAG_NOTIFICATION_INTENT = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick button1");
                 Intent intent = new Intent(getApplicationContext(), LogService.class);
                 bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+                buildNotification();
             }
         });
         button2 = (Button) findViewById(R.id.button2);
@@ -64,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick button2");
 //                Intent intent = new Intent(getApplicationContext(), LogService.class);
                 unbindService(mConnection);
+                deleteNotification();
             }
         });
         button3 = (Button) findViewById(R.id.button3);
@@ -73,7 +81,43 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick button3");
                 Intent intent = new Intent(getApplicationContext(), LogService.class);
                 bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+                buildNotification();
             }
         });
+
+
     }
+
+    private void deleteNotification() {
+        NotificationManager manager = (NotificationManager) getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+        manager.cancel(100);
+    }
+
+    private void buildNotification() {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setContentTitle("TITLE iS XX");
+        builder.setContentText("Text is XX");
+        Intent seekToPreviousIntent = new Intent(this, LogService.class);
+        seekToPreviousIntent.setAction(ACTION_NOTIFICATION_INTENT);
+        PendingIntent seekToPreviousPendingIntent = PendingIntent.getService(getApplicationContext(), FLAG_NOTIFICATION_INTENT, seekToPreviousIntent, 0);
+        builder.setContentIntent(seekToPreviousPendingIntent);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            builder.addAction(R.mipmap.ic_launcher, "button", seekToPreviousPendingIntent);
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            MediaSession mediaSession = new MediaSession(getApplicationContext(), "naito");
+//            builder.setStyle(new Notification.MediaStyle()
+//                    .setMediaSession(mediaSession.getSessionToken())
+//                    .setShowActionsInCompactView(1));
+//        }
+        NotificationManager manager = (NotificationManager) getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            manager.notify(100, builder.build());
+        }
+    }
+
+//    private PendingIntent getPendingIntentWithBroadcast(String action) {
+//        return PendingIntent.getBroadcast(getApplicationContext(), 0 , new Intent(action), 0);
+//    }
 }
